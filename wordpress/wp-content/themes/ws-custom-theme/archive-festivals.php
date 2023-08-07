@@ -12,7 +12,7 @@
             }
             .wrapper .title{
                 text-align: center;
-                
+                              
             }
             .wrapper .container .col-sm-4 .button-tag{
                 background-color: white;
@@ -32,7 +32,7 @@
                 max-width: 400px;
                 -webkit-line-clamp: 2;
                 overflow: hidden;
-            }
+            }               
         </style>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="post-description">
                                     <p><?php echo $description; ?></p>
-                                </div>
+                                </div>                                                 
                             </div>
                             <?php
                             endwhile;
