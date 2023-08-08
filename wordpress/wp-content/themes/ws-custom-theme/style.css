@@ -4,4 +4,8 @@ Author: Ms Darani Shri
 Description: This is my first custom theme!
 Version: 1.0.0
 Tags: Sample theme
+body{
+	margin:0;
+	padding:0;
+}
 */
