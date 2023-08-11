@@ -4,7 +4,7 @@
             add_action( 'init',array(get_called_class(), 'register_news_cpt' ));
         }
 
-        function register_news_cpt() {
+        public static function register_news_cpt() {
             register_post_type( 'news',array(
                                         'labels' => 
                                             array(
