@@ -3,3 +3,42 @@
     grid-template-columns: auto auto auto;
     justify-content: space-evenly;
 }
+.details p{
+    color: red;
+}
+.custom-container{
+    width: 700px;
+    padding-top: 30px;
+    background-color: #f7f7f7;
+    margin-bottom: 30px;
+}
+.custom-card{
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+
+}
+.post-details .post-description p{
+    width: 300px;
+    display: -webkit-box;
+    max-width: 250px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.post-details .post-black p{
+    color: red;
+}
+.post-nav{
+    color: black;
+    text-decoration: underline;
+}
+h1{
+    color: #152035;
+}
+h3{
+    color: #596172;
+}
+.details h5{
+    color: rgb(120,129,147);
+}
