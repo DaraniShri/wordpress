@@ -1,3 +1,7 @@
+body{
+	margin:0;
+	padding:0;
+}
 .container .wrapper {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -7,16 +11,29 @@
     color: red;
 }
 .custom-container{
-    width: 700px;
-    padding-top: 30px;
+    display: flex;
+    flex-wrap: nowrap;
     background-color: #f7f7f7;
+}
+.custom-wrapper{
+    padding-top: 30px;
     margin-bottom: 30px;
+    justify-content: space-between;
+    padding-bottom: 30px;
 }
 .custom-card{
     display: grid;
     grid-template-columns: auto auto;
     justify-content: space-between;
-
+    margin-bottom: 20px;
+}
+.custom-card .thumbnail{
+    margin-right: 20px;
+}
+.static-card{
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap:  nowrap;
 }
 .post-details .post-description p{
     width: 300px;
@@ -41,4 +58,29 @@ h3{
 }
 .details h5{
     color: rgb(120,129,147);
+}
+.static-container .h1 h2{
+    margin-left: 10px;
+    margin-top: 70px;
+}
+.pagination-section{
+    margin-top: 30px;
+    position: relative;
+}
+.pagination-section a {
+    color: black;
+    padding: 10px 18px;
+    text-decoration: none;
+}
+.pagination-section a.active {
+    background-color: lightblue;
+    color: rgb(253,65,69);
+}
+
+.pagination-section a:hover:not(.active) {
+    background-color: rgb(253,65,69);
+}
+.static-card .thumbnail{
+    margin-right: 20px;
+    margin-left: 10px;
 }

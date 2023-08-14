@@ -18,12 +18,15 @@
         public static function static_posts_function() {
             ?>
                 <div class="static-container">
+                    <div class="h1">
+                        <h2>Trending Posts</h2>
+                    </div>
                     <div class="static-wrapper">
                         <?php
                             $args = array(
                                 'post_type' => 'fashion',
                                 'post_status' => 'publish',
-                                'posts_per_page' => 4
+                                'posts_per_page' => -1
                             );
                             $static_posts = new WP_Query( $args );
                             if ( $static_posts -> have_posts() ) {
@@ -31,6 +34,7 @@
                                     $args = array( 'post_title' => get_the_title(),
                                             'post_thumbnail' => wp_get_attachment_image(get_field('image_fashion')),
                                             'post_link' => get_permalink(),
+                                            'post_date' => get_the_date(),
                                         );
                                     ?>
                                     <div class="static-card">
@@ -47,6 +51,7 @@
                 </div>
             <?php
         }
+
         public static function recent_posts_function() {
             query_posts(array('orderby' => 'date', 
                             'order' => 'DESC' , 
@@ -91,19 +96,19 @@
 
         public static function custom_posts_function(){
                 ?>
+                <div class="h1">
+                    <h1>Custom Posts</h1>
+                </div>
+                <div class="h3">
+                    <h3>Our Custom Posts</h3>
+                </div>
                 <div class="custom-container">
-                    <div class="h1">
-                        <h1>Custom Posts</h1>
-                    </div>
-                    <div class="h3">
-                        <h3>Our Custom Posts</h3>
-                    </div>
                     <div class="custom-wrapper">
                         <?php
                             $args = array(
                                 'post_type' => 'festivals',
                                 'post_status' => 'publish',
-                                'posts_per_page' => 5
+                                'posts_per_page' => -1
                             );
                             $custom_posts = new WP_Query( $args );
                             if ( $custom_posts -> have_posts() ) {
@@ -126,6 +131,11 @@
                             }
                             wp_reset_query();
                         ?>
+                        <div class="pagination-section">
+                            <a href="#">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                        </div>
                     </div>
                 </div>
                 <?php                   
