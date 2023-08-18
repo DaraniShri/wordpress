@@ -1,4 +1,5 @@
 var CUSTOM = CUSTOM || {};
+
 CUSTOM.core = function () {
     var self = {
         load: function () {
