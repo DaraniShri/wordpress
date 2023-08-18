@@ -1,11 +1,9 @@
 <?php
     require 'classes/shortCode.php';
     require 'classes/customPost.php';
+    require 'classes/getPostsAPI.php';
+    require 'classes/loadScripts.php';
 
-    add_action( 'wp_enqueue_scripts', 'add_custom_js',20);
-    function add_custom_js() {
-        wp_enqueue_script( 'samplecustomejs', get_stylesheet_directory_uri(). '/assets/js/script.js' );
-    }
 
     // $addMetaValues=apply_filters('writeMeta',1,'meta_description','post meta value');
 
