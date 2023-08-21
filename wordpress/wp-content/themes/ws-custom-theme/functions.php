@@ -2,22 +2,8 @@
     require 'classes/shortCode.php';
     require 'classes/customPost.php';
     require 'classes/getPostsAPI.php';
+    require 'classes/loadScripts.php';
 
-
-    add_action( 'wp_enqueue_scripts', 'add_custom_js',20);
-    function add_custom_js() {
-        wp_enqueue_script( 'samplecustomjs', get_stylesheet_directory_uri(). '/assets/js/script.js' );
-    }
-
-    add_action( 'wp_enqueue_scripts', 'add_dependency_scripts',18);
-    function add_dependency_scripts() {
-        wp_enqueue_script( 'samplescriptdependency', get_template_directory_uri() . '/assets/js/jquery.min.js');
-    }
-
-    add_action( 'wp_enqueue_scripts', 'add_custom_js',20);
-    function add_custom_js() {
-        wp_enqueue_script( 'samplecustomejs', get_stylesheet_directory_uri(). '/assets/js/script.js' );
-    }
 
     // $addMetaValues=apply_filters('writeMeta',1,'meta_description','post meta value');
 

@@ -25,13 +25,18 @@ class getPostsAPI{
             $responseArray = [];
             foreach($festivals as $festival){
                 $postId=$festival->ID;
-                $responseArray[] = array(
-                    'post_id' => $festival->ID,
-                    'post_name' => $festival->post_title,
-                    'post_description' => get_the_excerpt($postId),
-                    'post_date' => $festival->post_date,
-                    'post_status' => $festival->post_status,
-                );
+                $post_type = $festival->post_type;
+                $terms = get_the_terms($postId, 'religions' );
+                foreach($terms as $term) {
+                    $responseArray[] = array(
+                        'post_id' => $festival->ID,
+                        'post_name' => $festival->post_title,
+                        'post_description' => get_the_excerpt($postId),
+                        'post_date' => $festival->post_date,
+                        'post_status' => $festival->post_status,
+                        'post_category' => $term->name,
+                    );
+                }
             }
             return json_encode($responseArray);
         }
