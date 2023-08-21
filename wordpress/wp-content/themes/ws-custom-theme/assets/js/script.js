@@ -1,5 +1,4 @@
 var CUSTOM = CUSTOM || {};
-
 CUSTOM.core = function () {
     var self = {
         load: function () {
@@ -49,14 +48,8 @@ CUSTOM.core = function () {
             $.each(tr,function(rows,row){
                 name = row.getElementsByTagName("td")[2];
                 description = row.getElementsByTagName("td")[4];
-                if(isEmpty(name)){
-                    document.write("No Festival found");
-                }
-                else{
-                    if (isEmpty(description) ) {
-                        document.write("No description found");
-                    }
-                    else{
+                if( name){
+                    if (description ) {
                         nameValue = name.textContent;
                         txtValue = description.textContent;
                         if (txtValue.toUpperCase().indexOf(filter) > -1  ||  nameValue.toUpperCase().indexOf(filter) > -1) {
@@ -76,17 +69,15 @@ CUSTOM.core = function () {
             tr = table.getElementsByTagName("tr");
             $.each(tr,function(rows,row){
                 category = row.getElementsByTagName("td")[3];
-                if(isEmpty(category)){
-                    document.write("No category found");
-                }
-                else{
-                    categoryValue = category.textContent;
-                    if (categoryValue.toUpperCase().indexOf(filter) > -1) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
+                if( category){
+                        categoryValue = category.textContent;
+                        if (categoryValue.toUpperCase().indexOf(filter) > -1) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
                     }
-                }                
+                
             });
         },
         sortFunction: function() {
