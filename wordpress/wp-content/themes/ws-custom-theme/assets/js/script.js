@@ -8,7 +8,7 @@ CUSTOM.core = function () {
             $('#table-id').append('<input type="text" id="filter-input" placeholder="filter for posts">');
             $('#table-id').append('<input type="text" id="search-input" placeholder="search for posts">');
             $('#table-id').append('<button id="sort-click">Sort</button>');
-            $("input").keyup( function(){
+            $('#search-input').keyup( function(){
                 self.searchFunction()
             });
             $('#filter-input').keyup( function(){
@@ -16,11 +16,12 @@ CUSTOM.core = function () {
             });
             $('#table-id').append('<table id="data" border="1">' );
                 $('#data').append("<tr><th>ID</th><th>DATE</th><th>NAME</th><th>CATEGORY</th><th>DESCRIPTION</th><th>STATUS</th></tr>");
+                $('#data').append('<tbody id="data-body">');
+                $('#data').append('</tbody>');
             $('#table-id').append( '</table>' );
-            document.getElementById("sort-click").addEventListener("click", function(){
-                                                                                self.sortFunction()
-                                                                            });
-
+            $('button').click(function(){
+                                self.sortFunction()
+                            });
             var ajaxUrl = 'http://localhost/wordpress/wp-json/mypost/api/get-posts/';
             jQuery.ajax({
                 url: ajaxUrl,
@@ -34,54 +35,64 @@ CUSTOM.core = function () {
                         var postdescription = post.post_description;
                         var postdate = post.post_date;
                         var poststatus = post.post_status;
-                        $('#data').append("<tr><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
+                        $('#data').append("<tr class='data-row'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
                     });
                 },
             });
         },
         searchFunction: function() {
-            var search, filter, table, tr, description, name, nameValue, txtValue;
-            search = document.getElementById("search-input");
-            filter = search.value.toUpperCase();
-            table = document.getElementById("data");
-            tr = table.getElementsByTagName("tr");
-            $.each(tr,function(rows,row){
-                name = row.getElementsByTagName("td")[2];
-                description = row.getElementsByTagName("td")[4];
-                if( name){
-                    if (description ) {
-                        nameValue = name.textContent;
-                        txtValue = description.textContent;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1  ||  nameValue.toUpperCase().indexOf(filter) > -1) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    }
-                }
+            $('#search-input').on("keyup", function() {
+                var search = $(this).val().toUpperCase();
+                $('#data-body  tr').filter(function(){
+                    $(this).toggle($(this).text().toUpperCase().indexOf(search) > -1);
+                })
             });
         },
+
         filterFunction: function() {
-            var search, filter, table, tr, description, name, nameValue, txtValue;
-            search = document.getElementById("filter-input");
-            filter = search.value.toUpperCase();
-            table = document.getElementById("data");
-            tr = table.getElementsByTagName("tr");
-            $.each(tr,function(rows,row){
-                category = row.getElementsByTagName("td")[3];
-                if( category){
-                        categoryValue = category.textContent;
-                        if (categoryValue.toUpperCase().indexOf(filter) > -1) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    }
-                
+            $('#filter-input').on("keyup", function() {
+                var filter = $(this).val().toUpperCase();
+                var category= $('#data-body  tr');
+                category.filter(function(){
+                    $(this).toggle($(this.children[3]).text().toUpperCase().indexOf(filter) > -1);
+                });
             });
         },
+
+        // filterFunction: function() {
+        //     var search, filter, table, tr, category, categoryValue;
+        //     search = $('#filter-input');
+        //     filter = search.value.toUpperCase();
+        //     table = $('#data');
+        //     tr = table.$('tr');
+        //     $.each(tr,function(rows,row){
+        //         category = row.$('td')[3];
+        //         if( category!=null){
+    //                 categoryValue = category.textContent;
+    //                 console.log(categoryValue);
+    //                 if (categoryValue.toUpperCase().indexOf(filter) > -1) {
+    //                     row.style.display = "";
+    //                 } else {
+    //                     row.style.display = "none";
+    //                 }
+    //             }
+                
+    //     });
+    // },
+
         sortFunction: function() {
-            console.log("namasthey");
+            var compare_rows = function (a,b){
+                var a_val = $(a).text().toLowerCase();
+                var b_val = $(b).text().toLowerCase();
+                if (a_val>b_val){
+                  return 1;
+                }
+                if (a_val<b_val){
+                  return -1;
+                }
+                return 0;
+            };
+            $('#data .data-row').sort(compare_rows).appendTo('#data');
         }
     };
     return self;

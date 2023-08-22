@@ -15,7 +15,15 @@ class getPostsAPI{
     public static function get_post_data(){
         $args = array(
             'post_type'   => 'festivals',
-            'posts_per_page' => -1
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'religions',
+                    'field' => 'slug',
+                    'terms' => array('hinduism', 'christianity', 'islam')
+                )
+            ),
         );
         $festivals = get_posts( $args );
         if ( empty( $festivals ) ) {
