@@ -5,22 +5,58 @@ CUSTOM.core = function () {
             jQuery(document).ready(self.ready);
         },
         ready: function () {
-            $('#table-id').append('<input type="text" id="filter-input" placeholder="filter for posts">');
-            $('#table-id').append('<input type="text" id="search-input" placeholder="search for posts">');
-            $('#table-id').append('<button id="sort-click">Sort</button>');
-            $("input").keyup( function(){
+            $('.div-buttons').append('<button id="button-hindu">Hinduism</button>');
+            $('.div-buttons').append('<button id="button-christian">Christianity</button>');
+            $('.div-buttons').append('<button id="button-islam">Islam</button>');
+            $('.div-buttons').append('<button id="reset">x</button>');
+            $('#reset').click(function(){
+                // $("#data-body").find("tr").show();
+                var trcount=$("#data-body").find("tr").length;
+                console.log(trcount);
+                var table=$('#data');
+                if (table.hasClass('more')) {
+                    table.removeClass('more');
+                    $(this).text($(this).data('more'));
+                }
+                else {
+                    $("#data-body").find("tr").show();
+                }
+            });
+            $('.div-buttons').append('');
+
+            $('.div-search').append('<input type="text" id="search-input" placeholder="search for posts">');
+            $('#search-input').keyup( function(){
                 self.searchFunction()
             });
             $('#filter-input').keyup( function(){
                 self.filterFunction()
             });
-            $('#table-id').append('<table id="data" border="1">' );
-                $('#data').append("<tr><th>ID</th><th>DATE</th><th>NAME</th><th>CATEGORY</th><th>DESCRIPTION</th><th>STATUS</th></tr>");
+            $('#table-id').append('<table class="table" id="data" border="1">' );
+                $('#data').append("<thead><tr><th scope='col'>ID<button id='postid'>*</button></th><th>DATE</th><th scope='col'>NAME<button id='postname'>*</button></th><th scope='col'>CATEGORY<button id='category'>*</button></th><th>DESCRIPTION</th><th>STATUS</th></tr></thead>");
+                $('#data').append('<tbody id="data-body">');
+                $('#data').append('</tbody>');
             $('#table-id').append( '</table>' );
-            document.getElementById("sort-click").addEventListener("click", function(){
-                                                                                self.sortFunction()
-                                                                            });
-
+            $('#postname').click(function(){
+                                self.sortFunction(2,'text')
+                            });
+            $('#postid').click(function(){
+                                self.sortFunction(0,'number')
+                            });
+            $('#category').click(function(){
+                                self.sortFunction(3,'text')
+            });
+            $('#button-hindu').click(function(){
+                var rows = $("#data-body").find("tr").hide();
+                console.log(rows.filter(":contains('Hinduism')").show().length);
+            });
+            $('#button-christian').click(function(){
+                var rows = $("#data-body").find("tr").hide();
+                console.log(rows.filter(":contains('Christianity')").show().length);
+            });
+            $('#button-islam').click(function(){
+                var rows = $("#data-body").find("tr").hide();
+                console.log(rows.filter(":contains('Islam')").show().length);
+            });
             var ajaxUrl = 'http://localhost/wordpress/wp-json/mypost/api/get-posts/';
             jQuery.ajax({
                 url: ajaxUrl,
@@ -34,54 +70,37 @@ CUSTOM.core = function () {
                         var postdescription = post.post_description;
                         var postdate = post.post_date;
                         var poststatus = post.post_status;
-                        $('#data').append("<tr><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
+                        $('#data').append("<tr class='data-row'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
                     });
                 },
             });
         },
+
         searchFunction: function() {
-            var search, filter, table, tr, description, name, nameValue, txtValue;
-            search = document.getElementById("search-input");
-            filter = search.value.toUpperCase();
-            table = document.getElementById("data");
-            tr = table.getElementsByTagName("tr");
-            $.each(tr,function(rows,row){
-                name = row.getElementsByTagName("td")[2];
-                description = row.getElementsByTagName("td")[4];
-                if( name){
-                    if (description ) {
-                        nameValue = name.textContent;
-                        txtValue = description.textContent;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1  ||  nameValue.toUpperCase().indexOf(filter) > -1) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    }
+            $('#search-input').on("keyup", function() {
+                var search = $(this).val().toUpperCase();
+                $('#data-body  tr').filter(function(){
+                    $(this).toggle($(this).text().toUpperCase().indexOf(search) > -1);
+                })
+            });
+        },
+
+        sortFunction: function(column, type) {
+            var order = $('.table thead tr>th:eq(' + column + ')').data('order');
+            order = order === 'ASC' ? 'DESC' : 'ASC';
+            $('.table thead tr>th:eq(' + column + ')').data('order', order);
+            $('.table tbody tr').sort(function(a, b) {
+                a = $(a).find('td:eq(' + column + ')').text();
+                b = $(b).find('td:eq(' + column + ')').text();
+                switch (type) {
+                    case 'text':
+                        return order === 'ASC' ? a.localeCompare(b) : b.localeCompare(a);
+                        break;
+                    case 'number':
+                        return order === 'ASC' ? a - b : b - a;
+                        break;
                 }
-            });
-        },
-        filterFunction: function() {
-            var search, filter, table, tr, description, name, nameValue, txtValue;
-            search = document.getElementById("filter-input");
-            filter = search.value.toUpperCase();
-            table = document.getElementById("data");
-            tr = table.getElementsByTagName("tr");
-            $.each(tr,function(rows,row){
-                category = row.getElementsByTagName("td")[3];
-                if( category){
-                        categoryValue = category.textContent;
-                        if (categoryValue.toUpperCase().indexOf(filter) > -1) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    }
-                
-            });
-        },
-        sortFunction: function() {
-            console.log("namasthey");
+            }).appendTo('.table tbody');            
         }
     };
     return self;

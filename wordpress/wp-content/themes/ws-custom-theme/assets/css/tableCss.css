@@ -14,14 +14,6 @@
     margin-top: 8px;
     font-size: 17px;
 }
-#sort-click{
-    width: 100px;
-    border: 2px solid black;
-    border-radius: 5px;
-    padding: 6px;
-    margin-top: 8px;
-    background-color: aqua;
-}
 table{
     border-collapse: collapse;
     margin-top: 20px;
@@ -30,4 +22,10 @@ table{
 th, td {
     padding: 15px;
     text-align: left;
+}
+.div-buttons #button-hindu, #button-christian, #button-islam, #reset{
+    margin: 2px;
+    width: 100px;
+    background-color: aquamarine;
+    border-radius: 15px;
 }
