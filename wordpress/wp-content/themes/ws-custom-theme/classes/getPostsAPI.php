@@ -1,5 +1,4 @@
 <?php
-
 class getPostsAPI{
     public static function hookInitiate(){
         add_action( 'rest_api_init', array(get_called_class(),'add_post_api'));
@@ -21,7 +20,7 @@ class getPostsAPI{
                 array(
                     'taxonomy' => 'religions',
                     'field' => 'slug',
-                    'terms' => array('hinduism', 'christianity', 'islam')
+                    'terms' => array('hinduism', 'christianity', 'islam', 'buddhism')
                 )
             ),
         );
@@ -43,6 +42,7 @@ class getPostsAPI{
                         'post_date' => $festival->post_date,
                         'post_status' => $festival->post_status,
                         'post_category' => $term->name,
+                        'post_term_id' => $term->term_id,
                     );
                 }
             }

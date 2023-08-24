@@ -5,41 +5,61 @@ CUSTOM.core = function () {
             jQuery(document).ready(self.ready);
         },
         ready: function () {
-            $('#table-id').append('<input type="text" id="filter-input" placeholder="filter for posts">');
-            $('#table-id').append('<input type="text" id="search-input" placeholder="search for posts">');
-            $('#table-id').append('<button id="sort-click">Sort</button>');
-            $('#search-input').keyup( function(){
-                self.searchFunction()
-            });
-            $('#filter-input').keyup( function(){
-                self.filterFunction()
-            });
-            $('#table-id').append('<table id="data" border="1">' );
-                $('#data').append("<tr><th>ID</th><th>DATE</th><th>NAME</th><th>CATEGORY</th><th>DESCRIPTION</th><th>STATUS</th></tr>");
+            $('.div-buttons').append('<button id="reset">Refresh</button>');
+            $('.div-search').append('<input type="text" id="search-input" placeholder="search for posts">');
+            $('#table-id').append('<table class="table" id="data" border="1">' );
+                $('#data').append("<thead><tr><th scope='col' width='60px'>ID<button id='postid'>*</button></th><th>DATE</th><th scope='col'>NAME<button id='postname'>*</button></th><th scope='col' width='140px'>CATEGORY<button id='category'>*</button></th><th>DESCRIPTION</th><th>STATUS</th></tr></thead>");
                 $('#data').append('<tbody id="data-body">');
                 $('#data').append('</tbody>');
             $('#table-id').append( '</table>' );
-            $('button').click(function(){
-                                self.sortFunction()
-                            });
+            self.clickFunction();
             var ajaxUrl = 'http://localhost/wordpress/wp-json/mypost/api/get-posts/';
             jQuery.ajax({
                 url: ajaxUrl,
                 type: 'GET',
                 success: function (response) {
                     var jsonResponse = JSON.parse(response);
+                    var categorynamelist=new Array();
                     $.each(jsonResponse,function(postArray,post){
                         var postcategory = post.post_category;
                         var postid = post.post_id;
                         var postname = post.post_name;
                         var postdescription = post.post_description;
                         var postdate = post.post_date;
-                        var poststatus = post.post_status;
+                        var poststatus = post.post_status;  
+                        var posttermid = post.post_term_id;
+                        console.log(posttermid);
+                        categorynamelist.push(postcategory);                        
                         $('#data').append("<tr class='data-row'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
+                    });
+                    var categoryname = categorynamelist.filter(function(element, index, self) {
+                        return index === self.indexOf(element);
+                    });                   
+                    $.each(categoryname,function(categories,categorys){
+                        var li = $('<li><input type="checkbox" name="' + categories + '" id="' + categorys + '"term-d"'+ '"/>' + '<label for="' + categorys + '"></label></li>');
+                        li.find('label').text(categorys);
+                        $('.div-buttons').append(li);
+                        self.categoryFunction(categorys);                     
                     });
                 },
             });
         },
+
+        categoryFunction: function(categorys){
+            var count=0;
+            $('#'+categorys).change(function() {
+                if($('#'+categorys).is(':checked')){    
+                   var namecategory =categorys.toUpperCase();
+                    $('#data-body  tr').filter(function(){
+                        $(this).toggle($(this.children[3]).text().toUpperCase().indexOf(namecategory) > -1); 
+                        count =$('.data-row:not([style*="display: none"])').length; 
+                    });
+                    console.log(count);  
+                    $('<h4>No of posts : '+count+'</h4>').insertAfter('#reset');                   
+                }
+            });
+        },
+
         searchFunction: function() {
             $('#search-input').on("keyup", function() {
                 var search = $(this).val().toUpperCase();
@@ -49,51 +69,64 @@ CUSTOM.core = function () {
             });
         },
 
-        filterFunction: function() {
-            $('#filter-input').on("keyup", function() {
-                var filter = $(this).val().toUpperCase();
-                var category= $('#data-body  tr');
-                category.filter(function(){
-                    $(this).toggle($(this.children[3]).text().toUpperCase().indexOf(filter) > -1);
-                });
-            });
+        sortFunction: function(column, type) {
+            var order = $('.table thead tr>th:eq(' + column + ')').data('order');
+            order = order === 'ASC' ? 'DESC' : 'ASC';
+            $('.table thead tr>th:eq(' + column + ')').data('order', order);
+            $('.table tbody tr').sort(function(a, b) {
+                a = $(a).find('td:eq(' + column + ')').text();
+                b = $(b).find('td:eq(' + column + ')').text();
+                switch (type) {
+                    case 'text':
+                        return order === 'ASC' ? a.localeCompare(b) : b.localeCompare(a);
+                        break;
+                    case 'number':
+                        return order === 'ASC' ? a - b : b - a;
+                        break;
+                }
+            }).appendTo('.table tbody');            
         },
 
-        // filterFunction: function() {
-        //     var search, filter, table, tr, category, categoryValue;
-        //     search = $('#filter-input');
-        //     filter = search.value.toUpperCase();
-        //     table = $('#data');
-        //     tr = table.$('tr');
-        //     $.each(tr,function(rows,row){
-        //         category = row.$('td')[3];
-        //         if( category!=null){
-    //                 categoryValue = category.textContent;
-    //                 console.log(categoryValue);
-    //                 if (categoryValue.toUpperCase().indexOf(filter) > -1) {
-    //                     row.style.display = "";
-    //                 } else {
-    //                     row.style.display = "none";
-    //                 }
-    //             }
-                
-    //     });
-    // },
+        clickFunction: function(){
+            $('#reset').click(function(){
+                history.go(0);
+            });
 
-        sortFunction: function() {
-            var compare_rows = function (a,b){
-                var a_val = $(a).text().toLowerCase();
-                var b_val = $(b).text().toLowerCase();
-                if (a_val>b_val){
-                  return 1;
-                }
-                if (a_val<b_val){
-                  return -1;
-                }
-                return 0;
-            };
-            $('#data .data-row').sort(compare_rows).appendTo('#data');
+            $('#search-input').keyup( function(){
+                self.searchFunction()
+            });
+            $('#filter-input').keyup( function(){
+                self.filterFunction()
+            });
+
+            $('#postname').click(function(){
+                self.sortFunction(2,'text')
+            });
+
+            $('#postid').click(function(){
+                self.sortFunction(0,'number')
+            });
+
+            $('#category').click(function(){
+                self.sortFunction(3,'text')
+            });
+
+            // $('#button-hindu').click(function(){
+            //     var rows = $("#data-body").find("tr").hide();
+            //     console.log(rows.filter(":contains('Hinduism')").show().length);
+            // });
+
+            // $('#button-christian').click(function(){
+            //     var rows = $("#data-body").find("tr").hide();
+            //     console.log(rows.filter(":contains('Christianity')").show().length);
+            // });
+            
+            // $('#button-islam').click(function(){
+            //     var rows = $("#data-body").find("tr").hide();
+            //     console.log(rows.filter(":contains('Islam')").show().length);
+            // });
         }
+
     };
     return self;
 }();
