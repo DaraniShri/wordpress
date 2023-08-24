@@ -14,47 +14,58 @@ CUSTOM.core = function () {
             $('#table-id').append( '</table>' );
             self.clickFunction();
             var ajaxUrl = 'http://localhost/wordpress/wp-json/mypost/api/get-posts/';
+            var termdetails=[];
             jQuery.ajax({
                 url: ajaxUrl,
                 type: 'GET',
                 success: function (response) {
                     var jsonResponse = JSON.parse(response);
-                    var categorynamelist=new Array();
                     $.each(jsonResponse,function(postArray,post){
-                        var postcategory = post.post_category;
                         var postid = post.post_id;
                         var postname = post.post_name;
                         var postdescription = post.post_description;
                         var postdate = post.post_date;
                         var poststatus = post.post_status;  
                         var posttermid = post.post_term_id;
-                        console.log(posttermid);
-                        categorynamelist.push(postcategory);                        
-                        $('#data').append("<tr class='data-row'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
+                        var postcategory = post.post_category;
+                        if(termdetails[post.post_term_id]===undefined){
+                            var termid=post.post_term_id;
+                            var termname=post.post_category
+                            termdetails[termid]=termname;
+                        }                  
+                        $('#data').append("<tr class='data-row' data-id='"+posttermid+"'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
+                    });   
+                    $.each(termdetails,function(key,value){
+                        if(typeof value  !== "undefined"){
+                            var li = $('<li><input type="checkbox" name="' + key + '" id="' + key +  '"/>' + '<label for="' + key + '">'+value+'</label></li>');
+                            li.find('label').text(value);
+                            $('.div-buttons').append(li);
+                            self.categoryFunction(key);
+                        }
+                                             
                     });
-                    var categoryname = categorynamelist.filter(function(element, index, self) {
-                        return index === self.indexOf(element);
-                    });                   
-                    $.each(categoryname,function(categories,categorys){
-                        var li = $('<li><input type="checkbox" name="' + categories + '" id="' + categorys + '"term-d"'+ '"/>' + '<label for="' + categorys + '"></label></li>');
-                        li.find('label').text(categorys);
-                        $('.div-buttons').append(li);
-                        self.categoryFunction(categorys);                     
-                    });
+                    self.paginationFunction();
+
                 },
             });
         },
 
-        categoryFunction: function(categorys){
+        paginationFunction: function(){
+            var posts_per_page = 5;
+            var total_posts = $('#data').find('.data-row').length;
+
+            var number_pages = Math.ceil(total_posts/posts_per_page);
+            console.log(number_pages);
+        },
+
+        categoryFunction: function(key){
             var count=0;
-            $('#'+categorys).change(function() {
-                if($('#'+categorys).is(':checked')){    
-                   var namecategory =categorys.toUpperCase();
+            $('#'+key).change(function() {
+                if($('#'+key).is(':checked')){    
                     $('#data-body  tr').filter(function(){
-                        $(this).toggle($(this.children[3]).text().toUpperCase().indexOf(namecategory) > -1); 
+                        $(this).toggle($(this).attr('data-id').indexOf(key) > -1);
                         count =$('.data-row:not([style*="display: none"])').length; 
                     });
-                    console.log(count);  
                     $('<h4>No of posts : '+count+'</h4>').insertAfter('#reset');                   
                 }
             });
@@ -110,21 +121,6 @@ CUSTOM.core = function () {
             $('#category').click(function(){
                 self.sortFunction(3,'text')
             });
-
-            // $('#button-hindu').click(function(){
-            //     var rows = $("#data-body").find("tr").hide();
-            //     console.log(rows.filter(":contains('Hinduism')").show().length);
-            // });
-
-            // $('#button-christian').click(function(){
-            //     var rows = $("#data-body").find("tr").hide();
-            //     console.log(rows.filter(":contains('Christianity')").show().length);
-            // });
-            
-            // $('#button-islam').click(function(){
-            //     var rows = $("#data-body").find("tr").hide();
-            //     console.log(rows.filter(":contains('Islam')").show().length);
-            // });
         }
 
     };
