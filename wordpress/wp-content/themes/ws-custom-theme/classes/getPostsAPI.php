@@ -20,7 +20,7 @@ class getPostsAPI{
                 array(
                     'taxonomy' => 'religions',
                     'field' => 'slug',
-                    'terms' => array('hinduism', 'christianity', 'islam', 'buddhism')
+                    'terms' => array('hinduism', 'christianity', 'islam', 'buddhism', 'jainism')
                 )
             ),
         );

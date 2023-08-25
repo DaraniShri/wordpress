@@ -29,3 +29,29 @@ th, td {
     background-color: aquamarine;
     border-radius: 15px;
 }
+.current {
+    color: rgb(0, 0, 0);
+    background-color: rgb(249, 42, 42);
+    padding: 15px;
+}
+  
+#pagination li {
+    display: inline-block;
+}
+#pagination li a{
+    margin: 10px;
+}
+
+#export-csv{
+    width: fit-content;
+    background-color: aqua;
+}
+
+a.export,a.export:visited {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    padding: 8px;
+}
