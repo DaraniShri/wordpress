@@ -26,7 +26,7 @@ CUSTOM.core = function () {
                             var termid=post.post_term_id;
                             var termname=post.post_category
                             termdetails[termid]=termname;
-                        }                  
+                          
                         $('#data').append("<tr class='data-row' data-id='"+posttermid+"'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
                     });   
                     $.each(termdetails,function(key,value){
