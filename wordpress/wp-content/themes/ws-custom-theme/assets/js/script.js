@@ -23,8 +23,15 @@ CUSTOM.core = function () {
                         var posttermid = post.post_term_id;
                         var postcategory = post.post_category;
                         if(termdetails[post.post_term_id]===undefined){
+<<<<<<< HEAD
                             termdetails[post.post_term_id]=[post.post_category];
                         }                  
+=======
+                            var termid=post.post_term_id;
+                            var termname=post.post_category
+                            termdetails[termid]=termname;
+                          
+>>>>>>> 68bd114a098c9c4ccb51d3b773320eb17444797d
                         $('#data').append("<tr class='data-row' data-id='"+posttermid+"'><td>"+postid+"</td><td>"+postdate+"</td><td>"+postname+"</td><td>"+postcategory+"</td><td>"+postdescription+"</td><td>"+poststatus+"</td></tr>");
                     });   
                     $.each(termdetails,function(key,value){
